@@ -1,27 +1,36 @@
 pipeline {
     agent any
     stages {
-        stage('Build and Deploy') {
+        stage('Build') {
+            when {
+                expression { env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod' }
+            }
             steps {
                 script {
-                    // Check if the branch is 'dev'
-                    if (env.BRANCH_NAME == 'dev') {
-                        // Build and deploy to development environment
-                        sh "mvn -Dmaven.test.failure.ignore=true clean package"
-                        // Add any additional steps for deployment to the 'dev' environment
-                    }
-                    // Check if the branch is 'stage'
-                    else if (env.BRANCH_NAME == 'stage') {
-                        // Build and deploy to staging environment
-                        sh "mvn -Dmaven.test.failure.ignore=true clean package"
-                        // Add any additional steps for deployment to the 'stage' environment
-                    }
-                    // Check if the branch is 'prod'
-                    else if (env.BRANCH_NAME == 'prod') {
-                        // Build and deploy to production environment
-                        sh "mvn -Dmaven.test.failure.ignore=true clean package"
-                        // Add any additional steps for deployment to the 'prod' environment
-                    }
+                    // Add build steps specific to each branch if necessary
+                    echo "Building ${env.BRANCH_NAME} branch"
+                }
+            }
+        }
+        stage('Deploy') {
+            when {
+                expression { env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod' }
+            }
+            steps {
+                script {
+                    // Add deploy steps specific to each branch if necessary
+                    echo "Deploying ${env.BRANCH_NAME} branch"
+                }
+            }
+        }
+        stage('Staging') {
+            when {
+                expression { env.BRANCH_NAME == 'stage' }
+            }
+            steps {
+                script {
+                    // Add staging steps specific to the 'stage' branch if necessary
+                    echo "Staging ${env.BRANCH_NAME} branch"
                 }
             }
         }
