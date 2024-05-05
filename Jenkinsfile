@@ -33,7 +33,13 @@ pipeline {
         }
         stage('Staging') {
             when {
-                branch 'stage'
+                allOf {
+                    branch 'stage'
+                    not {
+                        branch 'main'
+                        branch 'devops'
+                    }
+                }
             }
             steps {
                 script {
