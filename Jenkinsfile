@@ -11,7 +11,6 @@ pipeline {
                     echo "Building ${env.BRANCH_NAME} branch"
                 }
             }
-            displayName "${env.BRANCH_NAME == 'dev' ? 'Build-dev' : env.BRANCH_NAME == 'stage' ? 'Build-stage' : 'Build-prod'}"
         }
         stage('Deploy') {
             when {
@@ -23,19 +22,17 @@ pipeline {
                     echo "Deploying ${env.BRANCH_NAME} branch"
                 }
             }
-            displayName "${env.BRANCH_NAME == 'dev' ? 'Deploy-dev' : env.BRANCH_NAME == 'stage' ? 'Deploy-stage' : 'Deploy-prod'}"
         }
         stage('Staging') {
             when {
-                expression { env.BRANCH_NAME != 'dev' }
+                expression { env.BRANCH_NAME == 'stage' }
             }
             steps {
                 script {
-                    // Add staging steps specific to the branch if necessary
+                    // Add staging steps specific to the 'stage' branch if necessary
                     echo "Staging ${env.BRANCH_NAME} branch"
                 }
             }
-            displayName "${env.BRANCH_NAME == 'stage' ? 'Staging-stage' : env.BRANCH_NAME == 'prod' ? 'Staging-prod' : 'Staging-${env.BRANCH_NAME}'}"
         }
     }
 }
