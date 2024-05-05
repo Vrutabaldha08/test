@@ -1,10 +1,11 @@
 pipeline {
     agent any
+    when {
+        // Specify branches to run the pipeline
+        expression { env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod' }
+    }
     stages {
         stage('Build') {
-            when {
-                expression { env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod' }
-            }
             steps {
                 script {
                     // Add build steps specific to each branch if necessary
@@ -13,9 +14,6 @@ pipeline {
             }
         }
         stage('Deploy') {
-            when {
-                expression { env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod' }
-            }
             steps {
                 script {
                     // Add deploy steps specific to each branch if necessary
