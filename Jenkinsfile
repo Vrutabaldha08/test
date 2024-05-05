@@ -3,45 +3,39 @@ pipeline {
     stages {
         stage('Build') {
             when {
-                expression {
-                    return env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod'
-                }
+                expression { env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod' }
             }
             steps {
                 script {
-                    sh "echo 'Start Build for ${env.BRANCH_NAME} branch'"
-                    // Add any build steps specific to the branch
+                    // Add build steps specific to each branch if necessary
+                    echo "Building ${env.BRANCH_NAME} branch"
                 }
             }
-            displayName "Build-${env.BRANCH_NAME}"
+            displayName "${env.BRANCH_NAME == 'dev' ? 'Build-dev' : env.BRANCH_NAME == 'stage' ? 'Build-stage' : 'Build-prod'}"
         }
         stage('Deploy') {
             when {
-                expression {
-                    return env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod'
-                }
+                expression { env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod' }
             }
             steps {
                 script {
-                    sh "echo 'Start Deploy for ${env.BRANCH_NAME} branch'"
-                    // Add any deploy steps specific to the branch
+                    // Add deploy steps specific to each branch if necessary
+                    echo "Deploying ${env.BRANCH_NAME} branch"
                 }
             }
-            displayName "Deploy-${env.BRANCH_NAME}"
+            displayName "${env.BRANCH_NAME == 'dev' ? 'Deploy-dev' : env.BRANCH_NAME == 'stage' ? 'Deploy-stage' : 'Deploy-prod'}"
         }
-        stage('Stage') {
+        stage('Staging') {
             when {
-                expression {
-                    return env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'stage' || env.BRANCH_NAME == 'prod'
-                }
+                expression { env.BRANCH_NAME != 'dev' }
             }
             steps {
                 script {
-                    sh "echo 'Start Stage for ${env.BRANCH_NAME} branch'"
-                    // Add any staging steps specific to the branch
+                    // Add staging steps specific to the branch if necessary
+                    echo "Staging ${env.BRANCH_NAME} branch"
                 }
             }
-            displayName "Stage-${env.BRANCH_NAME}"
+            displayName "${env.BRANCH_NAME == 'stage' ? 'Staging-stage' : env.BRANCH_NAME == 'prod' ? 'Staging-prod' : 'Staging-${env.BRANCH_NAME}'}"
         }
     }
 }
