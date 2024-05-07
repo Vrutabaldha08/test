@@ -33,13 +33,14 @@ pipeline {
             }
         }
     }
-}
-
-if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod') {
-    stage('Build') {
-        steps {
-            // Your build steps for 'dev' and 'prod' branches
-            echo 'Building...'
+    
+    // Define the 'Build' stage outside of the 'stages' block
+    if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod') {
+        stage('Build') {
+            steps {
+                // Your build steps for 'dev' and 'prod' branches
+                echo 'Building...'
+            }
         }
     }
 }
