@@ -12,14 +12,15 @@ pipeline {
         }
         
         stage('Build') {
-            when {
-                expression {
-                    env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod'
-                }
-            }
             steps {
-                // Your build steps for 'dev' and 'prod' branches
-                echo 'Building...'
+                script {
+                    if (env.BRANCH_NAME != 'dev' && env.BRANCH_NAME != 'prod') {
+                        echo 'Skipping Build stage for branch other than dev or prod'
+                        return
+                    }
+                    // Your build steps for 'dev' and 'prod' branches
+                    echo 'Building...'
+                }
             }
         }
         
