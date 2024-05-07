@@ -4,7 +4,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from the respective branch
                 script {
                     checkout scm
                 }
@@ -13,14 +12,12 @@ pipeline {
         
         stage('Test') {
             steps {
-                // Your test steps for all branches
                 echo 'Testing...'
             }
         }
         
         stage('Deploy') {
             steps {
-                // Your deployment steps for all branches
                 echo 'Deploying...'
             }
         }
@@ -34,13 +31,20 @@ pipeline {
         }
     }
     
-    // Define the 'Build' stage outside of the 'stages' block
     if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod') {
         stage('Build') {
             steps {
-                // Your build steps for 'dev' and 'prod' branches
                 echo 'Building...'
             }
         }
+    } else {
+        stage('Build Skipped') {
+            steps {
+                echo 'Build stage skipped for branch: ${env.BRANCH_NAME}'
+            }
+        }
     }
+    
+    // Debugging: Print branch name
+    println "Branch Name: ${env.BRANCH_NAME}"
 }
