@@ -1,51 +1,46 @@
 pipeline {
     agent any
+    
     stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from the respective branch
+                script {
+                    checkout scm
+                }
+            }
+        }
+        
         stage('Build') {
             when {
-                anyOf {
-                    branch 'dev'
-                    branch 'stage'
-                    branch 'prod'
+                expression {
+                    env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod' || env.BRANCH_NAME == 'stage'
                 }
             }
             steps {
-                script {
-                    // Add build steps specific to each branch if necessary
-                    echo "Building ${env.BRANCH_NAME} branch"
-                }
+                // Your build steps for all branches
             }
         }
+        
+        stage('Test') {
+            when {
+                expression {
+                    env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod' || env.BRANCH_NAME == 'stage'
+                }
+            }
+            steps {
+                // Your test steps for all branches
+            }
+        }
+        
         stage('Deploy') {
             when {
-                anyOf {
-                    branch 'dev'
-                    branch 'stage'
-                    branch 'prod'
+                expression {
+                    env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod' || env.BRANCH_NAME == 'stage'
                 }
             }
             steps {
-                script {
-                    // Add deploy steps specific to each branch if necessary
-                    echo "Deploying ${env.BRANCH_NAME} branch"
-                }
-            }
-        }
-        stage('Staging') {
-            when {
-                allOf {
-                    branch 'stage'
-                    not {
-                        branch 'main'
-                        branch 'devops'
-                    }
-                }
-            }
-            steps {
-                script {
-                    // Add staging steps specific to the 'stage' branch if necessary
-                    echo "Staging ${env.BRANCH_NAME} branch"
-                }
+                // Your deployment steps for all branches
             }
         }
     }
