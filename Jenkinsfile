@@ -8,63 +8,40 @@ pipeline {
     
     stages {
         stage('Build') {
+            when {
+                expression { branchName in ['b1', 'b2', 'b3'] }
+            }
             steps {
                 script {
                     // Only execute build steps if the branch matches the stage
-                    if (branchName == 'b1') {
-                        echo 'Building for b1...'
-                        // Your build steps for b1 branch
-                    } else if (branchName == 'b2') {
-                        echo 'Building for b2...'
-                        // Your build steps for b2 branch
-                    } else if (branchName == 'b3') {
-                        echo 'Building for b3...'
-                        // Your build steps for b3 branch
-                    } else {
-                        echo "Skipping build stage for branch ${branchName}"
-                        currentBuild.result = 'ABORTED'
-                        error "Branch not supported for build"
-                    }
+                    echo "Building for ${branchName}..."
+                    // Your build steps for the branch
                 }
             }
         }
         
         stage('Test') {
+            when {
+                expression { branchName in ['b1', 'b2', 'b3'] }
+            }
             steps {
                 script {
                     // Only execute test steps if the branch matches the stage
-                    if (branchName == 'b1') {
-                        echo 'Testing for b1...'
-                        // Your test steps for b1 branch
-                    } else if (branchName == 'b2') {
-                        echo 'Testing for b2...'
-                        // Your test steps for b2 branch
-                    } else if (branchName == 'b3') {
-                        echo 'Testing for b3...'
-                        // Your test steps for b3 branch
-                    } else {
-                        echo "Skipping test stage for branch ${branchName}"
-                    }
+                    echo "Testing for ${branchName}..."
+                    // Your test steps for the branch
                 }
             }
         }
         
         stage('Deploy') {
+            when {
+                expression { branchName in ['b1', 'b2', 'b3'] }
+            }
             steps {
                 script {
                     // Only execute deployment steps if the branch matches the stage
-                    if (branchName == 'b1') {
-                        echo 'Deploying for b1...'
-                        // Your deployment steps for b1 branch
-                    } else if (branchName == 'b2') {
-                        echo 'Deploying for b2...'
-                        // Your deployment steps for b2 branch
-                    } else if (branchName == 'b3') {
-                        echo 'Deploying for b3...'
-                        // Your deployment steps for b3 branch
-                    } else {
-                        echo "Skipping deploy stage for branch ${branchName}"
-                    }
+                    echo "Deploying for ${branchName}..."
+                    // Your deployment steps for the branch
                 }
             }
         }
