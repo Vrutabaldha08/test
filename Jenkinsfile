@@ -1,45 +1,43 @@
 pipeline {
     agent any
     
+    environment {
+        // Define a variable to store the branch name
+        branchName = "${env.BRANCH_NAME}"
+    }
+    
     stages {
-        stage('Checkout') {
+        stage('Build') {
+            when {
+                // Only execute this stage if the branch is 'dev'
+                expression { branchName == 'dev' }
+            }
             steps {
-                // Checkout code from the respective branch
-                script {
-                    checkout scm
-                }
+                // Your build steps here
+                echo 'Building...'
             }
         }
         
         stage('Test') {
+            when {
+                // Only execute this stage if the branch is 'stage'
+                expression { branchName == 'stage' }
+            }
             steps {
-                // Your test steps for all branches
+                // Your test steps here
                 echo 'Testing...'
             }
         }
         
         stage('Deploy') {
+            when {
+                // Only execute this stage if the branch is 'prod'
+                expression { branchName == 'prod' }
+            }
             steps {
-                // Your deployment steps for all branches
+                // Your deployment steps here
                 echo 'Deploying...'
             }
-        }
-    }
-    
-    post {
-        always {
-            script {
-                currentBuild.result = currentBuild.result ?: 'SUCCESS'
-            }
-        }
-    }
-}
-
-if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod') {
-    stage('Build') {
-        steps {
-            // Your build steps for 'dev' and 'prod' branches
-            echo 'Building...'
         }
     }
 }
