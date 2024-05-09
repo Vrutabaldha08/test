@@ -1,22 +1,45 @@
-
 pipeline {
     agent any
     
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                sh 'echo "Building..."'
+                // Checkout code from the respective branch
+                script {
+                    checkout scm
+                }
             }
         }
+        
         stage('Test') {
             steps {
-                sh 'echo "Testing..."'
+                // Your test steps for all branches
+                echo 'Testing...'
             }
         }
+        
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying..."'
+                // Your deployment steps for all branches
+                echo 'Deploying...'
             }
+        }
+    }
+    
+    post {
+        always {
+            script {
+                currentBuild.result = currentBuild.result ?: 'SUCCESS'
+            }
+        }
+    }
+}
+
+if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'prod') {
+    stage('Build') {
+        steps {
+            // Your build steps for 'dev' and 'prod' branches
+            echo 'Building...'
         }
     }
 }
