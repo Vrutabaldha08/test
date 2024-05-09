@@ -46,4 +46,10 @@ pipeline {
             }
         }
     }
+    
+    post {
+        always {
+            echo "Pipeline completed for branch: ${branchName}"
+        }
+    }
 }
