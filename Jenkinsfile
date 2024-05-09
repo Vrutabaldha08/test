@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                // Only execute build steps if the branch matches the stage
                 script {
+                    // Only execute build steps if the branch matches the stage
                     if (branchName == 'b1') {
                         echo 'Building for b1...'
                         // Your build steps for b1 branch
@@ -20,6 +20,10 @@ pipeline {
                     } else if (branchName == 'b3') {
                         echo 'Building for b3...'
                         // Your build steps for b3 branch
+                    } else {
+                        echo "Skipping build stage for branch ${branchName}"
+                        currentBuild.result = 'ABORTED'
+                        error "Branch not supported for build"
                     }
                 }
             }
@@ -27,8 +31,8 @@ pipeline {
         
         stage('Test') {
             steps {
-                // Only execute test steps if the branch matches the stage
                 script {
+                    // Only execute test steps if the branch matches the stage
                     if (branchName == 'b1') {
                         echo 'Testing for b1...'
                         // Your test steps for b1 branch
@@ -38,6 +42,8 @@ pipeline {
                     } else if (branchName == 'b3') {
                         echo 'Testing for b3...'
                         // Your test steps for b3 branch
+                    } else {
+                        echo "Skipping test stage for branch ${branchName}"
                     }
                 }
             }
@@ -45,8 +51,8 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                // Only execute deployment steps if the branch matches the stage
                 script {
+                    // Only execute deployment steps if the branch matches the stage
                     if (branchName == 'b1') {
                         echo 'Deploying for b1...'
                         // Your deployment steps for b1 branch
@@ -56,6 +62,8 @@ pipeline {
                     } else if (branchName == 'b3') {
                         echo 'Deploying for b3...'
                         // Your deployment steps for b3 branch
+                    } else {
+                        echo "Skipping deploy stage for branch ${branchName}"
                     }
                 }
             }
