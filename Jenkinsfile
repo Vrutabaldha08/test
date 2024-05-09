@@ -5,8 +5,8 @@ pipeline {
         branchName = "${env.BRANCH_NAME}"
     }
 
-    // Check if the branch is not b1, b2, or b3
-    if (!(branchName in ['b1', 'b2', 'b3'])) {
+    // Check if the branch is not dev, stage, or prod
+    if (!(branchName in ['dev', 'stage', 'prod'])) {
         stages {
             stage('Skip') {
                 steps {
@@ -17,7 +17,7 @@ pipeline {
         return // Exit early
     }
 
-    // If the branch is b1, b2, or b3, continue with the pipeline execution
+    // If the branch is dev, stage, or prod, continue with the pipeline execution
     stages {
         stage('Build') {
             steps {
