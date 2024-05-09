@@ -5,21 +5,23 @@ pipeline {
         branchName = "${env.BRANCH_NAME}"
     }
 
-    // Check if the branch is not dev, stage, or prod
-    if (!(branchName in ['dev', 'stage', 'prod'])) {
-        stages {
-            stage('Skip') {
-                steps {
-                    echo "Skipping pipeline execution for branch: ${branchName}"
+    stages {
+        stage('Check Branch') {
+            steps {
+                script {
+                    // Check if the branch is not dev, stage, or prod
+                    if (!(branchName in ['dev', 'stage', 'prod'])) {
+                        echo "Branch not found in Jenkinsfile"
+                        error "Unsupported branch: ${branchName}"
+                    }
                 }
             }
         }
-        return // Exit early
-    }
 
-    // If the branch is dev, stage, or prod, continue with the pipeline execution
-    stages {
         stage('Build') {
+            when {
+                expression { branchName in ['dev', 'stage', 'prod'] }
+            }
             steps {
                 echo "Building for ${branchName}..."
                 // Your build steps for the branch
@@ -27,6 +29,9 @@ pipeline {
         }
         
         stage('Test') {
+            when {
+                expression { branchName in ['dev', 'stage', 'prod'] }
+            }
             steps {
                 echo "Testing for ${branchName}..."
                 // Your test steps for the branch
@@ -34,6 +39,9 @@ pipeline {
         }
         
         stage('Deploy') {
+            when {
+                expression { branchName in ['dev', 'stage', 'prod'] }
+            }
             steps {
                 echo "Deploying for ${branchName}..."
                 // Your deployment steps for the branch
