@@ -6,12 +6,12 @@ pipeline {
     }
 
     stages {
+        // Check if the branch is not dev, stage, or prod
         stage('Check Branch') {
             steps {
                 script {
-                    // Check if the branch is not dev, stage, or prod
                     if (!(branchName in ['dev', 'stage', 'prod'])) {
-                        echo "Branch not found in Jenkinsfile"
+                        currentBuild.result = 'ABORTED'
                         error "Unsupported branch: ${branchName}"
                     }
                 }
